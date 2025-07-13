@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Italienska Quiz</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 50px; background-color: #f4f4f4; }
+    .card { background: white; padding: 20px; border-radius: 10px; width: 300px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
+    .correct { background-color: #4CAF50; color: white; }
+    .wrong { background-color: #f44336; color: white; }
+    .neutral { background-color: #2196F3; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2 id="question">Vad betyder "Cane"?</h2>
+    <div id="answers">
+      <button onclick="checkAnswer(this)">Hund</button>
+      <button onclick="checkAnswer(this)">Katt</button>
+      <button onclick="checkAnswer(this)">Fågel</button>
+    </div>
+    <p id="result"></p>
+    <p>Poäng: <span id="score">0</span></p>
+    <button class="neutral" onclick="nextQuestion()">Nästa fråga</button>
+  </div>
+
+  <script>
+    const questions = [
+      { word: "Cane", correct: "Hund", options: ["Hund", "Katt", "Fågel"] },
+      { word: "Gatto", correct: "Katt", options: ["Hund", "Katt", "Mus"] },
+      { word: "Pane", correct: "Bröd", options: ["Bröd", "Ost", "Mjölk"] },
+      { word: "Latte", correct: "Mjölk", options: ["Vatten", "Mjölk", "Kaffe"] }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[current];
+      document.getElementById("question").innerText = `Vad betyder "${q.word}"?`;
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = '';
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = function () { checkAnswer(this); };
+        answersDiv.appendChild(btn);
+      });
+      document.getElementById("result").innerText = '';
+    }
+
+    function checkAnswer(button) {
+      const answer = button.innerText;
+      const correct = questions[current].correct;
+      if (answer === correct) {
+        button.classList.add("correct");
+        score++;
+        document.getElementById("result").innerText = "Rätt!";
+      } else {
+        button.classList.add("wrong");
+        document.getElementById("result").innerText = `Fel! Rätt svar: ${correct}`;
+      }
+      document.getElementById("score").innerText = score;
+      Array.from(document.querySelectorAll("#answers button")).forEach(btn => btn.disabled = true);
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current >= questions.length) {
+        alert("Quizet är klart! Totalt poäng: " + score);
+        current = 0;
+        score = 0;
+        document.getElementById("score").innerText = score;
+      }
+      loadQuestion();
+    }
+
+    // Start
+    loadQuestion();
+  </script>
+
+</body>
+</html>
